@@ -33,7 +33,7 @@ namespace Leitura
 
         public void CalculaFluxo()
         {
-            while (Calcula_Condicao() == false)
+            while (Calcula_Condicao() || iteracao < 5)
             {
                 for (int k = 1; k <= Barra.NBarra.Count; k++)
                 {
@@ -46,6 +46,7 @@ namespace Leitura
                         case 1:
                             Calcula_Q(iteracao, k);
                             Calcula_V(iteracao, k);
+                            V_solucao[iteracao, k] = Complex.FromPolarCoordinates(Barra.Tensao[k], V_solucao[iteracao, k].Phase);
                             break;
                         case 2:
                             S_solucao[iteracao, k] = new Complex(Barra.PotenciaAtivaEsperada[k], Barra.PotenciaReativaEsperada[k]);
@@ -87,16 +88,22 @@ namespace Leitura
 
         private void Calcula_Q(int iteracao, int k)
         {
-            Complex Ek = V_solucao[k, iteracao - 1];
-            //double p1 = 0;
+            Complex Ek = V_solucao[iteracao - 1, k];
 
-            //for (int i = 1; Barra.NBarra.Count < k; i++)
-            //{
-            //    p1 += Ek.Magnitude * Y_matriz[k, i].Magnitude * V_solucao[i, iteracao - 1].Magnitude * Math.Sin(Barra.Angulo[k] - Barra.Angulo[i] - Y_matriz[k, i].Phase);
-            //}
+            Complex p1 = new Complex(0, 0);
+            Complex p2 = new Complex(0, 0);
 
-            //S_solucao[iteracao, k] = new Complex(Barra.PotenciaAtivaEsperada[k], p1*100);
-            S_solucao[iteracao, k] = new Complex(100,0);
+            for (int i = 1; i < k; i++)
+            {
+                p1 += Y_matriz[k, i] * V_solucao[iteracao, i];
+            }
+
+            for (int i = k + 1; i <= Barra.NBarra.Count; i++)
+            {
+                p2 += Y_matriz[k, i] * V_solucao[iteracao - 1, i];
+            }
+
+            S_solucao[iteracao, k] = new Complex(Barra.PotenciaAtivaEsperada[k], -(Complex.Conjugate(Ek) * (p1 + p2 + Y_matriz[k, k] * Ek)).Imaginary);
         }
 
         public void PreencherTabelaComplexa(DataGridView grade, Sparse2DMatrix<int, int, Complex> Matriz)
@@ -130,7 +137,7 @@ namespace Leitura
                 erro[k-1] = Math.Abs((V_solucao[iteracao-1, k] - V_solucao[iteracao - 2, k]).Magnitude);
             }
 
-            if (erro.Max() <= 0.0000000001 && iteracao > 5)
+            if (erro.Max() >= 0.00001 && iteracao <= 3000)
                 return true;
             else
                 return false;
