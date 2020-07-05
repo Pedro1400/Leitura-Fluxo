@@ -206,7 +206,9 @@ namespace Leitura
 
                 for (int k = 1; k <= Barra.NBarra.Count; k++)
                 {
-                    V_solucao[iteracao, k] = Complex.FromPolarCoordinates(V_solucao[iteracao - 1, k].Magnitude + D_V[k], V_solucao[iteracao - 1, k].Phase + D_theta[k]);
+                    V_solucao[iteracao, k] = Complex.FromPolarCoordinates(
+                        V_solucao[iteracao - 1, k].Magnitude + D_V[k],
+                        V_solucao[iteracao - 1, k].Phase + D_theta[k]);
                 }
 
                 iteracao++;
@@ -215,11 +217,11 @@ namespace Leitura
 
         private Boolean CalculaCondicao()
         {
-            double[] erro = new double[Barra.NBarra.Count];
+            double[] erro = new double[2 * Barra.NBarra.Count];
 
-            for (int k = 1; k <= Barra.NBarra.Count; k++)
+            for (int j = 0; j < 2 * Barra.NBarra.Count; j++)
             {
-                erro[k - 1] = Math.Abs((V_solucao[iteracao - 1, k] - V_solucao[iteracao - 2, k]).Magnitude);
+                erro[j] = D_PQ_Solver[j];
             }
 
             if (erro.Max() >= 0.000001 && iteracao <= 3000)
