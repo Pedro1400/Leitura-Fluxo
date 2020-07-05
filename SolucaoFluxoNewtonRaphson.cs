@@ -165,11 +165,6 @@ namespace Leitura
                         Jacobiano[j + n, i] = Jacobiano_M[j + 1, i + 1];
                         Jacobiano[j, i + n] = Jacobiano_N[j + 1, i + 1];
                         Jacobiano[j + n, i + n] = Jacobiano_L[j + 1, i + 1];
-                        double obst = Jacobiano.Count;
-                        double obs11 = Jacobiano[1, 1];
-                        double obs12 = Jacobiano[1, 3];
-                        double obs21 = Jacobiano[3, 1];
-                        double obs22 = Jacobiano[3, 3];
                     }
                 }
 
@@ -187,9 +182,6 @@ namespace Leitura
                         case 0:
                             D_PQ[i] = (Barra.PotenciaAtivaEsperada[i] / 100) - Pcal[i];
                             D_PQ[i + n] = (Barra.PotenciaReativaEsperada[i] / 100) - Qcal[i];
-                            double obsx = Barra.PotenciaReativaEsperada[i] / 100;
-                            double obsy = Qcal[i];
-                            double obsz = D_PQ[i + n];
                             break;
 
                         case 1:
@@ -204,12 +196,6 @@ namespace Leitura
                     D_PQ_Solver[j] = D_PQ[j + 1];
                 }
 
-                int obst1 = D_PQ.Count;
-                double obs11111 = D_PQ_Solver[0];
-                double obs22222 = D_PQ_Solver[1];
-                double obs3333 = D_PQ_Solver[2];
-                double obs4444 = D_PQ_Solver[3];
-
                 LinearEquationSolver.Solve(D_PQ_Solver.Count, Jacobiano, D_PQ_Solver, D_theta_V);
 
                 for (int i = 1; i <= Barra.NBarra.Count; i++)
@@ -221,7 +207,6 @@ namespace Leitura
                 for (int k = 1; k <= Barra.NBarra.Count; k++)
                 {
                     V_solucao[iteracao, k] = Complex.FromPolarCoordinates(V_solucao[iteracao - 1, k].Magnitude + D_V[k], V_solucao[iteracao - 1, k].Phase + D_theta[k]);
-                    double obs = V_solucao[iteracao, k].Magnitude;
                 }
 
                 iteracao++;
