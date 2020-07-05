@@ -94,25 +94,30 @@ namespace Leitura
             switch(Metodo)
             {
                 case 1:
-                    SolucaoFluxoPotenciaGaussSiedel SolucaoGS = new SolucaoFluxoPotenciaGaussSiedel(Matriz.Y_matriz, Barra, Linha);
+                    SolucaoFluxoPotenciaGaussSiedel SolucaoGS = new SolucaoFluxoPotenciaGaussSiedel(Matriz.Y_matriz, Barra);
                     SolucaoGS.CalculaFluxo();
                     SolucaoGS.PreencherTabelaComplexa(dataGridView6, SolucaoGS.V_solucao);
+                    label2.Text = SolucaoGS.iteracao.ToString();
                     break;
 
                 case 2:
-                    SolucaoFluxoPotenciaMatrizZ SolucaoZ = new SolucaoFluxoPotenciaMatrizZ(Matriz.Y_matriz, Barra, Linha);
+                    SolucaoFluxoPotenciaMatrizZ SolucaoZ = new SolucaoFluxoPotenciaMatrizZ(Matriz.Y_matriz, Barra);
                     SolucaoZ.CalculaFluxo();
                     SolucaoZ.PreencherTabelaComplexa(dataGridView6, SolucaoZ.V_solucao);
                     SolucaoZ.PreencherTabelaMatriz_Z(dataGridView7, SolucaoZ.Z_matriz);
+                    label2.Text = SolucaoZ.iteracao.ToString();
                     break;
 
                 case 3:
+                    SolucaoFluxoNewtonRaphson SolucaoNR = new SolucaoFluxoNewtonRaphson(Matriz.G_matriz, Matriz.B_matriz, Matriz.Y_matriz, Barra, Linha);
+                    SolucaoNR.CalculaFluxo();
+                    SolucaoNR.PreencherTabelaComplexa(dataGridView6, SolucaoNR.V_solucao);
+                    label2.Text = SolucaoNR.iteracao.ToString();
                     break;
             }
-
         }
 
-        // Menu para a escolha do método do cálculo de fluxo de potência ------------------------------
+        // Menu para a escolha do método do cálculo de fluxo de potência --------------------------------
         private void gaussSiedelToolStripMenuItem_Click(object sender, EventArgs e)
         {
             gaussSiedelToolStripMenuItem.Checked = true;
@@ -129,7 +134,13 @@ namespace Leitura
             Metodo = 2;
         }
 
-        //---------------------------------------------------------------------------------------------
+        private void newtonRaphsonToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            gaussSiedelToolStripMenuItem.Checked = false;
+            matrizZToolStripMenuItem.Checked = false;
+            newtonRaphsonToolStripMenuItem.Checked = true;
+            Metodo = 3;
+        }
 
         // Menu para a escolha do modelo de trafo -------------------------------------------------------
         private void Modelo1_Click(object sender, EventArgs e)
@@ -167,6 +178,11 @@ namespace Leitura
             Modelo3.Checked = false;
             Modelo4.Checked = true;
             TipoTrafo = 4;
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
         }
 
         // ----------------------------------------------------------------------------------------------
