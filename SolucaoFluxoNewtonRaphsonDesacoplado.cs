@@ -102,12 +102,6 @@ namespace Leitura
                     Pcal[m] += Vk * Vm * (gkm * Math.Cos(TetaKM) - bkm * Math.Sin(TetaKM));
                 }
 
-                double obsPcal = Pcal[1];
-                double obsPca2 = Pcal[2];
-                double obsPca3 = Pcal[3];
-                double obsPca4 = Pcal[4];
-                double obsPca5 = Pcal[5];
-
                 for (int i = 1; i <= Barra.NBarra.Count; i++)
                 {
 
@@ -130,7 +124,6 @@ namespace Leitura
                 for (int k = 0; k < Barra.NBarra.Count; k++)
                 {
                     D_P_Solver[k] = D_P[k + 1];
-                    double obs = D_P_Solver[k];
                 }
 
                 double[] erroP = new double[Barra.NBarra.Count];
@@ -140,7 +133,7 @@ namespace Leitura
                     erroP[k] = D_P_Solver[k];
                 }
 
-                if (erroP.Max() <= 0.00000001 && iteracaoP > 2)
+                if (erroP.Max() <= 0.000001 && iteracaoP > 2)
                 {
                     KP = 0;
                 }
@@ -188,11 +181,6 @@ namespace Leitura
                             Jacobiano_H[j, i] = Jacobiano_H[j + 1, i + 1];
                         }
                     }
-
-                    double obs1 = Jacobiano_H[0, 0];
-                    double obs2 = Jacobiano_H[0, 1];
-                    double obs3 = Jacobiano_H[1, 0];
-                    double obs4 = Jacobiano_H[1, 1];
 
                     LinearEquationSolver.Solve(D_P_Solver.Count, Jacobiano_H, D_P_Solver, D_theta);
 
@@ -261,10 +249,9 @@ namespace Leitura
                 for (int k = 0; k < Barra.NBarra.Count; k++)
                 {
                     erroQ[k] = D_Q_Solver[k];
-                    double obs = erroQ[k];
                 }
 
-                if (erroP.Max() <= 0.00000001 && iteracaoP > 2)
+                if (erroP.Max() <= 0.000001 && iteracaoP > 2)
                 {
                     KQ = 0;
                 }
