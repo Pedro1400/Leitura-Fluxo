@@ -109,10 +109,17 @@ namespace Leitura
                     break;
 
                 case 3:
-                    SolucaoFluxoNewtonRaphson SolucaoNR = new SolucaoFluxoNewtonRaphson(Matriz.G_matriz, Matriz.B_matriz, Matriz.Y_matriz, Barra, Linha);
+                    SolucaoFluxoNewtonRaphson SolucaoNR = new SolucaoFluxoNewtonRaphson(Matriz.G_matriz, Matriz.B_matriz, Barra, Linha);
                     SolucaoNR.CalculaFluxo();
                     SolucaoNR.PreencherTabelaComplexa(dataGridView6, SolucaoNR.V_solucao);
                     label2.Text = SolucaoNR.iteracao.ToString();
+                    break;
+
+                case 4:
+                    SolucaoFluxoNewtonRaphsonDesacoplado SolucaoNRD = new SolucaoFluxoNewtonRaphsonDesacoplado(Matriz.G_matriz, Matriz.B_matriz, Barra, Linha);
+                    SolucaoNRD.CalculaFluxo();
+                    SolucaoNRD.PreencherTabelaComplexa(dataGridView6, SolucaoNRD.V_solucao);
+                    label2.Text = "P→" + SolucaoNRD.iteracaoP.ToString() + " Q→" + SolucaoNRD.iteracaoQ.ToString();
                     break;
             }
         }
@@ -123,6 +130,7 @@ namespace Leitura
             gaussSiedelToolStripMenuItem.Checked = true;
             matrizZToolStripMenuItem.Checked = false;
             newtonRaphsonToolStripMenuItem.Checked = false;
+            newtonRaphsonDesacopladoToolStripMenuItem.Checked = false;
             Metodo = 1;
         }
 
@@ -131,6 +139,7 @@ namespace Leitura
             gaussSiedelToolStripMenuItem.Checked = false;
             matrizZToolStripMenuItem.Checked = true;
             newtonRaphsonToolStripMenuItem.Checked = false;
+            newtonRaphsonDesacopladoToolStripMenuItem.Checked = false;
             Metodo = 2;
         }
 
@@ -139,7 +148,17 @@ namespace Leitura
             gaussSiedelToolStripMenuItem.Checked = false;
             matrizZToolStripMenuItem.Checked = false;
             newtonRaphsonToolStripMenuItem.Checked = true;
+            newtonRaphsonDesacopladoToolStripMenuItem.Checked = false;
             Metodo = 3;
+        }
+
+        private void newtonRaphsonDesacopladoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            gaussSiedelToolStripMenuItem.Checked = false;
+            matrizZToolStripMenuItem.Checked = false;
+            newtonRaphsonToolStripMenuItem.Checked = false;
+            newtonRaphsonDesacopladoToolStripMenuItem.Checked = true;
+            Metodo = 4;
         }
 
         // Menu para a escolha do modelo de trafo -------------------------------------------------------
