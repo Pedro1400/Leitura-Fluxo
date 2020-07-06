@@ -15,39 +15,36 @@ namespace Leitura
 {
     class SolucaoFluxoNewtonRaphson
     {
-        public Sparse2DMatrix<int, int, double> G_matriz = new Sparse2DMatrix<int, int, double>();
-        public Sparse2DMatrix<int, int, double> B_matriz = new Sparse2DMatrix<int, int, double>();
-        public Sparse2DMatrix<int, int, Complex> Y_matriz = new Sparse2DMatrix<int, int, Complex>();
+        private Sparse2DMatrix<int, int, double> G_matriz = new Sparse2DMatrix<int, int, double>();
+        private Sparse2DMatrix<int, int, double> B_matriz = new Sparse2DMatrix<int, int, double>();
 
         public Sparse2DMatrix<int, int, Complex> V_solucao = new Sparse2DMatrix<int, int, Complex>();
 
-        public SparseArray<int, double> Pcal = new SparseArray<int, double>();
-        public SparseArray<int, double> Qcal = new SparseArray<int, double>();
-        public SparseArray<int, double> D_PQ = new SparseArray<int, double>();
-        public SparseArray<int, double> D_PQ_Solver = new SparseArray<int, double>();
-        public SparseArray<int, double> D_theta_V = new SparseArray<int, double>();
-        public SparseArray<int, double> D_theta = new SparseArray<int, double>();
-        public SparseArray<int, double> D_V = new SparseArray<int, double>();
+        private SparseArray<int, double> Pcal = new SparseArray<int, double>();
+        private SparseArray<int, double> Qcal = new SparseArray<int, double>();
+        private SparseArray<int, double> D_PQ = new SparseArray<int, double>();
+        private SparseArray<int, double> D_PQ_Solver = new SparseArray<int, double>();
+        private SparseArray<int, double> D_theta_V = new SparseArray<int, double>();
+        private SparseArray<int, double> D_theta = new SparseArray<int, double>();
+        private SparseArray<int, double> D_V = new SparseArray<int, double>();
 
         private readonly Barra Barra;
         private readonly Linha Linha;
         public int iteracao = 0;
 
-        public Sparse2DMatrix<int, int, double> Jacobiano_H = new Sparse2DMatrix<int, int, double>();
-        public Sparse2DMatrix<int, int, double> Jacobiano_N = new Sparse2DMatrix<int, int, double>();
-        public Sparse2DMatrix<int, int, double> Jacobiano_M = new Sparse2DMatrix<int, int, double>();
-        public Sparse2DMatrix<int, int, double> Jacobiano_L = new Sparse2DMatrix<int, int, double>();
-        public Sparse2DMatrix<int, int, double> Jacobiano = new Sparse2DMatrix<int, int, double>();
+        private Sparse2DMatrix<int, int, double> Jacobiano_H = new Sparse2DMatrix<int, int, double>();
+        private Sparse2DMatrix<int, int, double> Jacobiano_N = new Sparse2DMatrix<int, int, double>();
+        private Sparse2DMatrix<int, int, double> Jacobiano_M = new Sparse2DMatrix<int, int, double>();
+        private Sparse2DMatrix<int, int, double> Jacobiano_L = new Sparse2DMatrix<int, int, double>();
+        private Sparse2DMatrix<int, int, double> Jacobiano = new Sparse2DMatrix<int, int, double>();
 
         public SolucaoFluxoNewtonRaphson(Sparse2DMatrix<int, int, double> G_mat,
                                          Sparse2DMatrix<int, int, double> B_mat,
-                                         Sparse2DMatrix<int, int, Complex> Y_mat,
                                          Barra Bar,
                                          Linha Lin)
         {
             G_matriz = G_mat;
             B_matriz = B_mat;
-            Y_matriz = Y_mat;
             Barra = Bar;
             Linha = Lin;
         }
@@ -168,6 +165,7 @@ namespace Leitura
                     }
                 }
 
+                // Calculando os erros DPQ
                 for (int i = 1; i <= Barra.NBarra.Count; i++)
                 {
                     int n = Barra.NBarra.Count;
@@ -204,6 +202,7 @@ namespace Leitura
                     D_V[i] = D_theta_V[i + Barra.NBarra.Count - 1];
                 }
 
+                // Atualizando os valores
                 for (int k = 1; k <= Barra.NBarra.Count; k++)
                 {
                     V_solucao[iteracao, k] = Complex.FromPolarCoordinates(
@@ -247,7 +246,6 @@ namespace Leitura
             }
 
             tabela.Rows.Add(row);
-
 
             grade.DataSource = tabela;
         }
